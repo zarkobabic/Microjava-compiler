@@ -1,0 +1,287 @@
+
+
+package rs.ac.bg.etf.pp1;
+
+
+import rs.etf.pp1.symboltable.*;
+import rs.etf.pp1.symboltable.concepts.*;
+import java_cup.runtime.*;
+import org.apache.log4j.*;
+import rs.ac.bg.etf.pp1.ast.*;
+
+parser code {:
+
+	boolean errorDetected;
+	Logger log = Logger.getLogger(getClass());
+   
+   
+    // slede redefinisani metodi za prijavu gresaka radi izmene teksta poruke
+     
+    public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+      done_parsing();
+      report_error(message, info);
+    }
+  
+    public void syntax_error(Symbol cur_token) {
+        report_error("\nSintaksna greska", cur_token);
+    }
+  
+    public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
+        report_fatal_error("Fatalna greska, parsiranje se ne moze nastaviti", cur_token);
+    }
+
+    public void report_error(String message, Object info) {
+    	errorDetected = true;
+    	StringBuilder msg = new StringBuilder(message); 
+    	if (info instanceof Symbol)
+            msg.append (" na liniji ").append(((Symbol)info).left);
+        log.error(msg.toString());
+    }
+
+
+:}
+
+init with {:
+	errorDetected = false;
+:}
+
+scan with {:
+	Symbol s = this.getScanner().next_token();
+	if (s != null && s.value != null) 
+		log.info(s.toString() + " " + s.value.toString());
+	return s;
+:}
+
+
+
+terminal PROG, BREAK, CLASS, IF, ELSE, CONST, WHILE, NEW, PRINT, READ, RETURN, VOID, EXTENDS, CONTINUE, MAP;
+terminal STATIC;
+terminal STAR, SLASH, PERCENT, ARROW, EQUAL, NOTEQUAL, GREATEROREQUAL, LESSOREQUAL, GREATER, LESS, AND, OR;
+terminal ASSIGNMENT, INCREMENT, DECREMENT, SEMICOLON, COLON, COMMA, DOT;
+terminal LEFTPARENTHESIS, RIGHTPARENTHESIS, LEFTSQUAREBRACKET, RIGHTSQUAREBRACKET, LEFTCURLYBRACKET, RIGHTCURLYBRACKET, PLUS, MINUS;
+
+terminal String IDENT;
+terminal Integer NUM;
+terminal Boolean BOOL;
+terminal Character CHAR;
+
+
+nonterminal TypesOfVar, SingleOrMultipleVarDecl, VarConstDeclList, VarDeclList, VarDecl, ConstDecl, SingleOrMultipleConstantDecl, Constants, ReturnType, MethodDeclList, StatementList;
+nonterminal FormPars, FormParameterList, WhileInstructionFlag;
+nonterminal Assignop, Label, Relop, Mulop, Addop;
+
+//deo koji se tice funkcija
+nonterminal Statement, DesignatorStatement, ActPars, ActParsList;
+nonterminal IfStatement, IfStatementFlag, WhileRightParenthesis, IfRightParenthesis, IfElsePart;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program, MethodTypeName, MethodDecl, MyObj, MapVariable;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Factor, Term, Expr, CondFact, CondTerm, Condition, Designator;
+
+
+precedence left ELSE;
+precedence left IF;
+
+
+Program ::= (Program) PROG ProgName VarConstDeclList LEFTCURLYBRACKET MethodDeclList RIGHTCURLYBRACKET;
+
+ProgName ::= (ProgName) IDENT:nameOfProg;
+
+Assignop ::= (Assignop) ASSIGNMENT;
+
+Label ::= (Label) IDENT;
+
+Relop ::= (RelopEqual) EQUAL
+		|
+		(RelopNotEqual) NOTEQUAL
+		|
+		(RelopGreater) GREATER
+		|
+		(RelopGreaterOrEqual) GREATEROREQUAL
+		|
+		(RelopLess) LESS
+		|
+		(RelopLessOrEqual) LESSOREQUAL;
+		
+Mulop ::= (MulopStar) STAR
+		|
+		(MulopSlash) SLASH
+		|
+		(MulopPercent) PERCENT;
+
+Addop ::= (AddopPlus) PLUS 
+		| 
+		(AddopMinus) MINUS;
+
+ReturnType ::= (ReturnTypeType) Type 
+			| 
+			(ReturnTypeVoid) VOID;
+
+Type ::= (Type) IDENT:typeName;
+
+Constants ::= (ConstantsNum) NUM:Number 
+			| 
+			(ConstantsChar) CHAR:Character
+			| 
+			(ConstantsBool) BOOL:Boolean;
+
+
+VarConstDeclList ::= (NoVarConstDeclList) /*epsilon*/
+				|
+				(NextVarDeclInJoinedList) VarConstDeclList VarDecl
+				|
+				(NextConstDeclInJoinedList) VarConstDeclList ConstDecl;
+				
+VarDeclList ::= (NoVarDeclList) /*epsilon*/
+			|
+			(VarDeclListSignle) VarDeclList VarDecl;
+
+VarDecl ::= (VarDecl) Type SingleOrMultipleVarDecl SEMICOLON;
+
+SingleOrMultipleVarDecl ::= (SingleVarDecl) TypesOfVar			
+						|
+						(MultipleVarDecl) SingleOrMultipleVarDecl COMMA TypesOfVar;
+
+TypesOfVar ::= (Identifier) IDENT:varName
+			|
+			(ArrayIdent) IDENT:varName LEFTSQUAREBRACKET RIGHTSQUAREBRACKET
+			|
+			(MatrixIdent) IDENT:varName LEFTSQUAREBRACKET RIGHTSQUAREBRACKET LEFTSQUAREBRACKET RIGHTSQUAREBRACKET;
+
+
+ConstDecl ::= (ConstDecl) CONST Type SingleOrMultipleConstantDecl SEMICOLON;
+////
+SingleOrMultipleConstantDecl ::= (SingleConstantDecl) IDENT:constName ASSIGNMENT Constants
+				|
+				(MultipleConstantDecl) SingleOrMultipleConstantDecl COMMA IDENT:ConstName ASSIGNMENT Constants;
+			
+MethodDeclList ::= (NoMethodDeclList) /*epsilon*/
+				|
+				(NextMethodDecl) MethodDeclList MethodDecl;
+				
+MethodDecl ::= (MethodDecl) MethodTypeName LEFTPARENTHESIS FormPars RIGHTPARENTHESIS VarDeclList LEFTCURLYBRACKET StatementList RIGHTCURLYBRACKET;
+
+MethodTypeName ::= (MethodTypeName) ReturnType IDENT:RealMethodName;
+
+FormPars ::= (NoFormPars) /*epsilon*/
+			|
+			(NextFormParameterList) FormParameterList;
+
+FormParameterList ::= (SingleFormParameter) Type TypesOfVar
+					|
+					(MultipleFormParameter) FormParameterList COMMA Type TypesOfVar; 
+
+//------------------------------------------
+StatementList ::= (NoStatementList) /*Epsilon*/
+				|
+				(NextStatement) StatementList Statement;
+				
+
+DesignatorStatement ::= (DesignatorStatementAssignment) Designator Assignop Expr SEMICOLON
+					|
+					(DesignatorStatementIncrement)Designator INCREMENT SEMICOLON
+					|
+					(DesignatorStatementDecrement) Designator DECREMENT SEMICOLON
+					|
+					(DesignatorStatementFunctionCall) Designator LEFTPARENTHESIS ActPars RIGHTPARENTHESIS SEMICOLON//treba proveriti za konflikte
+					|
+					(DesignatorStatementMap) Designator Assignop Designator DOT MAP LEFTPARENTHESIS MapVariable ARROW Expr RIGHTPARENTHESIS SEMICOLON;
+
+MapVariable ::= (MapVariable) IDENT:globalOrLocalVar;
+
+ActPars ::= (NoActPars) /*Epsilon*/
+		|
+		(ActParsExists) ActParsList;
+		
+ActParsList ::= (SingleActParsExpr) Expr
+			|
+			(MultipleActParsExpr) ActParsList COMMA Expr;
+		
+Designator ::= (DesignatorIdent) MyObj
+			|
+			(DesignatorArrayElement) MyObj LEFTSQUAREBRACKET Expr RIGHTSQUAREBRACKET
+			|
+			(DesignatorMatrixElement) MyObj LEFTSQUAREBRACKET Expr RIGHTSQUAREBRACKET LEFTSQUAREBRACKET Expr RIGHTSQUAREBRACKET;
+
+MyObj ::= (MyObj) IDENT:name;
+
+//Moze umesto ovoga gore za Designator
+//Designator ::= IDENT DesignatorWithExpr;
+
+//DesignatorWithExpr ::= /*Epsilon*/
+//					|
+//					DesignatorWithExpr LEFTSQUAREBRACKET Expr RIGHTSQUAREBRACKET;
+
+
+Expr ::= (ExprMinusTerm) MINUS Term
+		|
+		(ExprTerm) Term
+		|
+		(ExprAddopTerm) Expr Addop Term;
+		
+Term ::= (TermFactor) Factor
+		|
+		(TermMulopFactor) Term Mulop Factor;
+
+Factor ::= (FactorDesignator) Designator
+		|
+		(FactorFunctionCall) Designator LEFTPARENTHESIS ActPars RIGHTPARENTHESIS
+		|
+		(FactorConstants) Constants
+		|
+		(FactorNewArray) NEW Type LEFTSQUAREBRACKET Expr RIGHTSQUAREBRACKET
+		|
+		(FactorCalculation) LEFTPARENTHESIS Expr RIGHTPARENTHESIS
+		|
+		(FactorNewMatrix) NEW Type LEFTSQUAREBRACKET Expr RIGHTSQUAREBRACKET LEFTSQUAREBRACKET Expr RIGHTSQUAREBRACKET;
+	
+	
+WhileInstructionFlag ::= (WhileInstructionFlag) WHILE;
+
+WhileRightParenthesis ::= (WhileRightParenthesis) RIGHTPARENTHESIS;
+	
+Statement ::= (StatementDesignatorStatement) DesignatorStatement
+			|
+			(StatementWhile) WhileInstructionFlag LEFTPARENTHESIS Condition WhileRightParenthesis Statement
+			|
+			(StatementBreak) BREAK SEMICOLON
+			|
+			(StatementContinue) CONTINUE SEMICOLON
+			|
+			(StatementReturnExpr) RETURN Expr SEMICOLON
+			|
+			(StatementReturn) RETURN SEMICOLON
+			|
+			(StatementRead) READ LEFTPARENTHESIS Designator RIGHTPARENTHESIS SEMICOLON
+			|
+			(StatementPrint) PRINT LEFTPARENTHESIS Expr RIGHTPARENTHESIS SEMICOLON
+			|
+			(StatementPrintWithNum) PRINT LEFTPARENTHESIS Expr COMMA NUM:intConstForPrint RIGHTPARENTHESIS SEMICOLON
+			|
+			(StatementCodeBlock) LEFTCURLYBRACKET StatementList RIGHTCURLYBRACKET
+			|
+			(StatementIfStatement) IfStatement;
+			
+IfStatement ::= (IfStatementWithoutElse) IfStatementFlag LEFTPARENTHESIS Condition IfRightParenthesis Statement
+			|
+			(IfElseStatement) IfStatementFlag LEFTPARENTHESIS Condition IfRightParenthesis Statement IfElsePart Statement;
+
+IfElsePart ::= (IfElsePart) ELSE;
+IfRightParenthesis ::= (IfRightParenthesis) RIGHTPARENTHESIS;
+IfStatementFlag ::= (IfStatementFlag) IF;
+
+
+//-------------------------------------------
+Condition ::= (ConditionSingleTerm) CondTerm //Prepoznajemo jedan term
+			|
+			(ConditionMultipleTerm)Condition OR CondTerm;
+			
+CondTerm ::= (CondTermSingleFact) CondFact //ovo ce uvek biti prvi
+			|
+			(ConditionMultipleFact) CondTerm AND CondFact;
+			
+CondFact ::= (CondFactExpr) Expr
+			|
+			(CondFactExprRelopExpr) Expr Relop Expr;
+			
+
+

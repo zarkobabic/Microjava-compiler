@@ -1,0 +1,16 @@
+program osnovniTest 
+const bool a = true;
+char ko[], sta, lp[]; 
+const bool t = false, k= true; 
+
+{
+
+void metoda1(int k){}
+
+void metoda1(int k[]) int a;{}
+int metoda1(int k, bool io[][]) int a,b;{}
+void metoda1(int k, char to[]) int a[],b[][],c[];{}
+lplp metoda1(int k[], char to[], bool p[]) int a[],b;{}
+void metoda1(){}
+
+}
