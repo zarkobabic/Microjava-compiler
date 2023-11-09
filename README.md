@@ -1,6 +1,17 @@
 # MicroJava Compiler
 
+## Overview
+
 This repository hosts the source code and documentation for the **MicroJava Compiler**, a Java-based compiler for the **MicroJava** programming language. MicroJava is a small, educational programming language, and this compiler is designed to convert MicroJava source code into bytecode that can be executed on the MicroJava Runtime Machine.
+
+## Navigation
+
+- [Overview](#overview)
+- [Project Components](#project-components)
+- [Syntax Analysis in General](#syntax-analysis-in-general)
+- [Usage](#usage)
+- [Contributions](#contributions)
+- [License](#license)
 
 ## Project Components
 
@@ -25,6 +36,10 @@ Syntax analysis, also known as parsing, is an essential part of any compiler. It
 ## Usage
 
 The MicroJava Compiler can be used by students and educators as a learning tool for understanding the principles of compiler construction. To build and use the compiler, please refer to the instructions provided in the repository's documentation.
+
+## Contributions
+
+We welcome contributions to enhance the MicroJava Compiler. If you'd like to contribute, please follow our guidelines as outlined in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## License
 
