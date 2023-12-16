@@ -1,4 +1,5 @@
 # MicroJava Compiler
+![Untitled](https://github.com/zarkobabic/Microjava-compiler/assets/92127059/5a4ec5ab-2712-49d6-a213-c5104a8039b9)
 
 ## Navigation
 
