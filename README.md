@@ -61,8 +61,8 @@ This appendix describes the MicroJava programming language. Microjava is similar
 
 ## A.1 General Features of the Language
 
-- A MikroJava program starts with a keyword `program` and has static fields, static methods, and inner classes that can be used as (user) data types.
-- The main method of a MikroJava program is always called `main()`. When a MikroJava program is called, that method is executed.
+- A MicroJava program starts with a keyword `program` and has static fields, static methods, and inner classes that can be used as (user) data types.
+- The main method of a MicroJava program is always called `main()`. When a MicroJava program is called, that method is executed.
 - Since:
   - Integer, sign, and logical constants (`int`, `char`, `bool`).
   - Basic types: `int`, `bool`, `char` (ASCII).
