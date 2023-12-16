@@ -55,11 +55,11 @@ The MicroJava Compiler can be used by students and educators as a learning tool 
 
 ## Documentation
 
-### Appendix A: MicroJava Programming Language
+## Appendix A: MicroJava Programming Language
 
-This appendix describes the MikroJava programming language. Microjava is similar to Java but much simpler.
+This appendix describes the MicroJava programming language. Microjava is similar to Java but much simpler.
 
-#### A.1 General Features of the Language
+## A.1 General Features of the Language
 
 - A MikroJava program starts with a keyword `program` and has static fields, static methods, and inner classes that can be used as (user) data types.
 - The main method of a MikroJava program is always called `main()`. When a MikroJava program is called, that method is executed.
@@ -81,7 +81,7 @@ This appendix describes the MikroJava programming language. Microjava is similar
 - Method `print` prints the values of all basic types.
 - Control structures include conditional branching (`if-else`) and cycle (`do-while`).
 
-#### A.2 Syntax
+## A.2 Syntax
 
 ## Program Structure
 Program = "program" ident {ConstDecl | VarDecl | ClassDecl } "{" {MethodDecl} "}".
