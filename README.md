@@ -83,28 +83,73 @@ This appendix describes the MikroJava programming language. Microjava is similar
 
 ## A.2 Syntax
 
+## Program Structure
 Program = "program" ident {ConstDecl | VarDecl | ClassDecl } "{" {MethodDecl} "}".
+
+## Constant Declaration
 ConstDecl = "const" Type ident "=" (numConst | charConst | boolConst) {, ident "=" (numConst | charConst | boolConst)} ";".
+
+## Variable Declaration
 VarDecl = Type ident ["[" "]"] {"," ident ["[" "]"]} ";".
+
+## Class Declaration
 ClassDecl = "class" ident ["extends" Type] "{" {VarDecl} ["{" {ConstructorDecl} {MethodDecl} "}"] "}".
+
+## Constructor Declaration
 ConstructorDecl = ident "(" [FormPars] ")" {VarDecl} "{" {Statement} "}. * za C nivo
+
+## Method Declaration
 MethodDecl = (Type | "void") ident "(" [FormPars] ")" {VarDecl} "{" {Statement} "}".
+
+## Formal Parameters
 FormPars = Type ident ["[" "]"] {"," Type ident ["[" "]"]}.
+
+## Type Definition
 Type = ident.
+
+## Statements
 Statement = DesignatorStatement ";" | "if" "(" Condition ")" Statement ["else" Statement] | "while" "(" Condition ")" Statement | "break" ";" | "continue" ";" | "return" [Expr] ";" | "read" "(" Designator ")" ";" | "print" "(" Expr ["," numConst] ")" ";" | Designator "." "foreach" "(" ident "=>" Statement ")" ";" | "{" {Statement} "}".
+
+## Designator Statement
 DesignatorStatement = Designator (Assignop Expr | "(" [ActPars] ")" | "++" | "‐‐") | "[" [Designator] {"," [Designator]}"]" "=" Designator.
+
+## Actual Parameters
 ActPars = Expr {"," Expr}.
+
+## Conditions
 Condition = CondTerm {"||" CondTerm}.
+
+## Conditional Term
 CondTerm = CondFact {"&&" CondFact}.
+
+## Conditional Factor
 CondFact = Expr [Relop Expr].
+
+## Expressions
 Expr = ["‐"] Term {Addop Term}.
+
+## Terms
 Term = Factor {Mulop Factor}.
+
+## Factors
 Factor = Designator ["(" [ActPars] ")"] | numConst | charConst | boolConst | "new" Type ( "[" Expr "]" | "(" [ActPars] ")" ) | "(" Expr ")".
+
+## Designators
 Designator = ident {"." ident | "[" Expr]"}.
+
+## Labels
 Label = ident.
+
+## Assignment Operator
 Assignop = "=".
+
+## Relational Operators
 Relop = "==" | "!=" | ">" | ">=" | "<" | "<=".
+
+## Addition Operators
 Addop = "+" | "‐".
+
+## Multiplication Operators
 Mulop = "*" | "/" | "%".
 
 
