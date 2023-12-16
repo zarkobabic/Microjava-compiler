@@ -12,11 +12,15 @@
 - [Usage](#usage)
 - [Documentation](#documentation)
 - [License](#license)
+  
 <br/>
+
 ## Overview
 
 This repository hosts the source code and documentation for the **MicroJava Compiler**, a Java-based compiler for the **MicroJava** programming language. MicroJava is a small, educational programming language, and this compiler is designed to convert MicroJava source code into bytecode that can be executed on the MicroJava Runtime Machine.
+
 <br/>
+
 ## Project Components
 
 The MicroJava Compiler consists of four primary components:
@@ -32,24 +36,33 @@ The MicroJava Compiler consists of four primary components:
 
 4. **Code Generation**:
    - The final phase of the compiler is responsible for generating executable bytecode for the MicroJava Runtime Machine. This process translates the validated AST into instructions that can be executed on the MicroJava virtual machine, enabling the execution of MicroJava programs.
+
 <br/>
+
 ## Lexing in General
 
 Lexing, also known as tokenization, is the process of breaking down the source code into a stream of tokens. Tokens are the smallest units of a programming language and include keywords, identifiers, operators, and literals. The lexer's role is to recognize and classify these tokens based on the language's grammar and rules.
+
 <br/>
+
 ## Parsing in General
 
 Parsing is a crucial step in the compilation process that follows lexing. It involves the analysis of the tokenized source code to determine its structure and relationships between different elements. In this phase, a parser constructs an Abstract Syntax Tree (AST) that represents the program's syntax according to the language's grammar. It enforces the correct order of statements, expressions, and the overall program structure.
+
 <br/>
 
 ## Syntax Analysis in General
 
 Syntax analysis, also known as parsing, is an essential part of any compiler. It ensures that the source code adheres to the rules and grammar of the target programming language. During this phase, the compiler constructs a structured representation of the code (such as an AST) and performs various checks to ensure correctness. Common tasks in syntax analysis include identifying and reporting syntax errors, handling operator precedence, and building a representation of the program that can be used for further processing and code generation.
+
 <br/>
+
 ## Code Generation in General
 
 Code generation is the final phase of a compiler, responsible for producing executable code from the parsed and analyzed source code. During this phase, the compiler generates code that can be executed on the target platform, such as machine code or bytecode. The generated code should adhere to the rules and specifications of the target platform and be semantically equivalent to the original source code.
+
 <br/>
+
 ## Usage
 
 The MicroJava Compiler can be used by students and educators as a learning tool for understanding the principles of compiler construction. To build and use the compiler, please refer to the instructions provided in the repository's documentation.
@@ -386,7 +399,9 @@ mulop = "* | / | %";
 - No more than 256 local variables may be used.
 - No more than 65536 global variables may be used.
 - A class cannot have more than 65536 fields.
+
 <br/>
+
 ## License
 
 This project is open source and available under the [MIT License](LICENSE). Feel free to use, modify, and distribute the code, respecting the terms and conditions of the license.
