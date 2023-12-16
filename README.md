@@ -82,7 +82,7 @@ This appendix describes the MicroJava programming language. Microjava is similar
 - Control structures include conditional branching (`if-else`) and cycle (`do-while`).
 
 ## A.2 Syntax
-```bison
+```java
 ## Program Structure
 Program = "program" ident {ConstDecl | VarDecl | ClassDecl } "{" {MethodDecl} "}".
 
