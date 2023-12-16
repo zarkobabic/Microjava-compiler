@@ -407,6 +407,6 @@ mulop = "* | / | %";
 
 This project is open source and available under the [MIT License](LICENSE). Feel free to use, modify, and distribute the code, respecting the terms and conditions of the license.
 
-For any questions or feedback, please don't hesitate to [contact us](mailto:your-email@example.com).
+For any questions or feedback, please don't hesitate to [contact me](mailto:zarko.m.babic@gmail.com).
 
 Thank you for your interest in the MicroJava Compiler project. We hope it serves as a valuable resource for understanding compiler construction and the MicroJava programming language.
