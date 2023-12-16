@@ -211,181 +211,179 @@ Validity range (scope) represents the textual reach of a method or class. It ext
 - `ord(c)`: must be of type char.
 - `len(s)`: must be a string or character string.
 
+##Program Structure
+program = "program" + " ident {ConstDecl | VarDecl | ClassDecl | RecordDecl } {" + "{MethodDecl} }.";
 
+## Const Declaration
+constDecl = "const Type ident = (numConst | charConst | boolConst);";
+- Terminal types numConst, charConst, or boolConst must be equivalent to Type.
 
-    // Program Structure
-    String program = "program" + " ident {ConstDecl | VarDecl | ClassDecl | RecordDecl } {" + "{MethodDecl} }.";
+## Variable Declaration
+- varDecl = "Type ident [][, ident [][]];";
 
-    // Const Declaration
-    String constDecl = "const Type ident = (numConst | charConst | boolConst);";
-    // Terminal types numConst, charConst, or boolConst must be equivalent to Type.
+## Class Declaration
+classDecl = "class ident extends Type {" + "VarDecl {" + "ConstructorDecl MethodDecl}}";
+- Type when deriving a class from another class, it must be an inner class of the main program.
 
-    // Variable Declaration
-    String varDecl = "Type ident [][, ident [][]];";
+## Method Declaration
+methodDecl = "(Type | void) ident (FormPars) VarDecl {Statement}";
+- If the method is not of type void, it must have a return statement within its body.
 
-    // Class Declaration
-    String classDecl = "class ident extends Type {" + "VarDecl {" + "ConstructorDecl MethodDecl}}";
-    // Type when deriving a class from another class, it must be an inner class of the main program.
+## Constructor Declaration
+constructorDecl = "ident (FormPars) VarDecl {Statement}";
+- A class constructor must have the same name as the class for which it is defined.
+- There cannot be two constructors within the same class with the same formal parameters.
 
-    // Method Declaration
-    String methodDecl = "(Type | void) ident (FormPars) VarDecl {Statement}";
-    // If the method is not of type void, it must have a return statement within its body.
+## Formal Parameters
+formPars = "Type ident [][] [, Type ident [][]]";
 
-    // Constructor Declaration
-    String constructorDecl = "ident (FormPars) VarDecl {Statement}";
-    // A class constructor must have the same name as the class for which it is defined.
-    // There cannot be two constructors within the same class with the same formal parameters.
+## Type Declaration
+type = "ident";
+- ident must indicate a data type.
 
-    // Formal Parameters
-    String formPars = "Type ident [][] [, Type ident [][]]";
+# Statements
 
-    // Type Declaration
-    String type = "ident";
-    // ident must indicate a data type.
+## Designator Statement
+designatorStatement = "Designator Assignop Expr;";
+- Designator must denote a variable, array element, or field within an object.
+- Non-terminal type Expr must be compatible at assignment with non-terminal type Designator.
 
-    // Statements
+## Increment/Decrement Statement
+incrementDecrementStatement = "Designator (++ | --);";
+- Designator must denote a variable, array element, or field of an inner class object.
+- Designator must be of type int.
 
-    // Designator Statement
-    String designatorStatement = "Designator Assignop Expr;";
-    // Designator must denote a variable, array element, or field within an object.
-    // Non-terminal type Expr must be compatible at assignment with non-terminal type Designator.
+## Method Call Statement
+methodCallStatement = "Designator (ActPars);";
+- Designator must denote a non-static method of the inner class or a global function.
 
-    // Increment/Decrement Statement
-    String incrementDecrementStatement = "Designator (++ | --);";
-    // Designator must denote a variable, array element, or field of an inner class object.
-    // Designator must be of type int.
+## Array Element Assignment
+arrayElementAssignment = "[Designator, Designator, ...] = Designator";
+- All Designator non-terminals to the left must denote a variable, array element, or field within an object.
+- Designator to the right must represent a string.
+- Array element types must be compatible at assignment.
 
-    // Method Call Statement
-    String methodCallStatement = "Designator (ActPars);";
-    // Designator must denote a non-static method of the inner class or a global function.
+## Break Statement
+breakStatement = "break;";
+- The break statement can only be used inside while or foreach loops.
+- Aborts execution immediately surrounding loops.
 
-    // Array Element Assignment
-    String arrayElementAssignment = "[Designator, Designator, ...] = Designator";
-    // All Designator non-terminals to the left must denote a variable, array element, or field within an object.
-    // Designator to the right must represent a string.
-    // Array element types must be compatible at assignment.
+## Continue Statement
+continueStatement = "continue;";
+- The continue statement can only be used inside while or foreach loops.
+- Terminates the current iteration immediately surrounding loops.
 
-    // Break Statement
-    String breakStatement = "break;";
-    // The break statement can only be used inside while or foreach loops.
-    // Aborts execution immediately surrounding loops.
+## Read Statement
+readStatement = "read(Designator);";
+- Designator must denote a variable, array element, or field within an object.
+- Designator must be of type int, char, or bool.
 
-    // Continue Statement
-    String continueStatement = "continue;";
-    // The continue statement can only be used inside while or foreach loops.
-    // Terminates the current iteration immediately surrounding loops.
+## Print Statement
+printStatement = "print(Expr [, numConst]);";
+- Expr must be of type int, char, or bool.
 
-    // Read Statement
-    String readStatement = "read(Designator);";
-    // Designator must denote a variable, array element, or field within an object.
-    // Designator must be of type int, char, or bool.
+## Return Statement
+returnStatement = "return [Expr];";
+- Non-terminal type Expr must be equivalent to the return type of the current method/global function.
+- If non-terminal Expr is missing, the current method must be declared void.
+- It must not exist outside the body of (static) methods, i.e., global functions.
 
-    // Print Statement
-    String printStatement = "print(Expr [, numConst]);";
-    // Expr must be of type int, char, or bool.
+##If Statement
+ifStatement = "if (Condition) Statement [else Statement];";
+- Conditional expression type Condition must be bool.
 
-    // Return Statement
-    String returnStatement = "return [Expr];";
-    // Non-terminal type Expr must be equivalent to the return type of the current method/global function.
-    // If non-terminal Expr is missing, the current method must be declared void.
-    // It must not exist outside the body of (static) methods, i.e., global functions.
+## While Loop
+whileLoop = "while (Condition) Statement;";
+- Conditional expression Condition must be of type bool.
+- Checks the specified condition when entering and at the end of the loop body.
 
-    // If Statement
-    String ifStatement = "if (Condition) Statement [else Statement];";
-    // Conditional expression type Condition must be bool.
+## Foreach Loop
+foreachLoop = "Designator.foreach(ident => Statement);";
+- Designator must denote a string of arbitrary type.
+- ident must be a local or global variable of the same type as the elements of the array described by the Designator.
+- In each iteration of the loop, ident indicates the current element of the array.
 
-    // While Loop
-    String whileLoop = "while (Condition) Statement;";
-    // Conditional expression Condition must be of type bool.
-    // Checks the specified condition when entering and at the end of the loop body.
+# Function Calls
 
-    // Foreach Loop
-    String foreachLoop = "Designator.foreach(ident => Statement);";
-    // Designator must denote a string of arbitrary type.
-    // ident must be a local or global variable of the same type as the elements of the array described by the Designator.
-    // In each iteration of the loop, ident indicates the current element of the array.
+## Actual Parameters
+actPars = "Expr [, Expr];";
+- The number of formal and actual arguments of a method or constructor must be the same.
+- The type of each actual argument must be compatible at assignment with the type of each formal argument.
 
-    // Function Calls
+# Conditions
 
-    // Actual Parameters
-    String actPars = "Expr [, Expr];";
-    // The number of formal and actual arguments of a method or constructor must be the same.
-    // The type of each actual argument must be compatible at assignment with the type of each formal argument.
+## Conditional Expression
+condition = "CondTerm || CondTerm;";
 
-    // Conditions
+## Conditional Term
+condTerm = "CondFact && CondFact;";
 
-    // Conditional Expression
-    String condition = "CondTerm || CondTerm;";
-    
-    // Conditional Term
-    String condTerm = "CondFact && CondFact;";
+## Conditional Factor
+condFact = "Expr Relop Expr;";
+- The types of both expressions must be compatible.
+- With variables of class or array type, only != and == can be used from the relational operators.
 
-    // Conditional Factor
-    String condFact = "Expr Relop Expr;";
-    // The types of both expressions must be compatible.
-    // With variables of class or array type, only != and == can be used from the relational operators.
+# Expressions
 
-    // Expressions
+## Basic Expression
+expr = "Term;";
 
-    // Basic Expression
-    String expr = "Term;";
+## Negation Expression
+negationExpr = "- Term;";
+- Term must be of type int.
 
-    // Negation Expression
-    String negationExpr = "- Term;";
-    // Term must be of type int.
+## Addition Expression
+additionExpr = "Expr Addop Term;";
+- Expr and Term must be of type int and compatible.
 
-    // Addition Expression
-    String additionExpr = "Expr Addop Term;";
-    // Expr and Term must be of type int and compatible.
+## Multiplication Expression
+multiplicationExpr = "Term Mullop Factor;";
+- Term and Factor must be of type int.
 
-    // Multiplication Expression
-    String multiplicationExpr = "Term Mullop Factor;";
-    // Term and Factor must be of type int.
+# Factors
 
-    // Factors
+## Designator Factor
+designatorFactor = "Designator | numConst | charConst | boolConst | (Expr);";
 
-    // Designator Factor
-    String designatorFactor = "Designator | numConst | charConst | boolConst | (Expr);";
+## Method Call Factor
+methodCallFactor = "Designator (ActPars);";
+- Designator must denote a non-static method, a constructor, or a global function.
 
-    // Method Call Factor
-    String methodCallFactor = "Designator (ActPars);";
-    // Designator must denote a non-static method, a constructor, or a global function.
+## Array Creation Factor
+arrayCreationFactor = "new Type [Expr];";
+- Expr must be of type int.
 
-    // Array Creation Factor
-    String arrayCreationFactor = "new Type [Expr];";
-    // Expr must be of type int.
+## Object Creation Factor
+objectCreationFactor = "new Type (ActPars);";
+- Type must denote an inner class (user-defined type).
 
-    // Object Creation Factor
-    String objectCreationFactor = "new Type (ActPars);";
-    // Type must denote an inner class (user-defined type).
+# Designators
 
-    // Designators
+designator1 = "Designator . ident;";
+- Non-terminal type Designator must be an inner class (ident must be either a field or a method of an object marked with a non-terminal Designator).
 
-    String designator1 = "Designator . ident;";
-    // Non-terminal type Designator must be an inner class (ident must be either a field or a method of an object marked with a non-terminal Designator).
+designator2 = "Designator [Expr];";
+- Non-terminal type Designator must be a string.
+- Non-terminal type Expr must be an int.
 
-    String designator2 = "Designator [Expr];";
-    // Non-terminal type Designator must be a string.
-    // Non-terminal type Expr must be an int.
+# Operators
 
-    // Operators
+assignop = "=";
+- The assignment operator is right-associative.
 
-    String assignop = "=";
-    // The assignment operator is right-associative.
+relop = "== | != | > | >= | < | <=";
+addop = "+ | -";
+- Operators are left-associative.
 
-    String relop = "== | != | > | >= | < | <=";
-    String addop = "+ | -";
-    // Operators are left-associative.
+mulop = "* | / | %";
+- Operators are left-associative.
 
-    String mulop = "* | / | %";
-    // Operators are left-associative.
+## Implementation Limitations
 
-    // Implementation Limitations
-
-    // No more than 256 local variables may be used.
-    // No more than 65536 global variables may be used.
-    // A class cannot have more than 65536 fields.
-    // The source code of the program must not exceed
+- No more than 256 local variables may be used.
+- No more than 65536 global variables may be used.
+- A class cannot have more than 65536 fields.
+- The source code of the program must not exceed
 
 
 
