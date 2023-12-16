@@ -81,68 +81,34 @@ This appendix describes the MikroJava programming language. Microjava is similar
 - Method `print` prints the values of all basic types.
 - Control structures include conditional branching (`if-else`) and cycle (`do-while`).
 
-### Example Program
+## A.2 Syntax
 
-```java
-program p 
-const int size = 10; 
-class Table { 
-int pos[], neg[], factor; 
-{ 
- Table(int factor) {this.factor = factor;} 
-void putp (int a, int idx) { this.pos[idx] = a; } 
- void putn (int a, int idx) { this.neg[idx] = a; } 
- int getp (int idx) { return pos[idx]; } 
- int getn (int idx) { return neg[idx]; } 
-} 
-} 
-Table val; 
-Int rows, columns; 
-{ 
-void f(char ch, int a, int arg) 
-int x; 
-{ 
- x = arg; 
-} 
-void main() int x, i; char c, int arr[]; 
-{ 
- val = new Table(2); 
- arr = new int[3]; 
-i = 0; 
-while (i<3) { 
-arr[i] = i; 
- i++; 
-} 
- arr.foreach(x => print(x);); 
-val.pos = new int [size]; 
-val.neg = new int [size]; 
-read(x); 
-[i,,x] = arr; 
-while (i<size) { 
-val.putp(0, i); 
- val.putn(0, i); 
- i++; 
-} 
- 
-f(c, x, i); 
- 
- read(rows); 
- x =rows; 
-while (true){ 
- if(x <= 0) break; 
- if (0 <= x && x < size) 
- { 
- val.putp(val.getp(x)+1); 
- } 
-else if (‐size < x && x < 0) 
- { 
- val.putn(val.getn(‐x)+1); 
- } 
- read(x); 
- } 
- 
-} 
-}
+Program = "program" ident {ConstDecl | VarDecl | ClassDecl } "{" {MethodDecl} "}".
+ConstDecl = "const" Type ident "=" (numConst | charConst | boolConst) {, ident "=" (numConst | charConst | boolConst)} ";".
+VarDecl = Type ident ["[" "]"] {"," ident ["[" "]"]} ";".
+ClassDecl = "class" ident ["extends" Type] "{" {VarDecl} ["{" {ConstructorDecl} {MethodDecl} "}"] "}".
+ConstructorDecl = ident "(" [FormPars] ")" {VarDecl} "{" {Statement} "}. * za C nivo
+MethodDecl = (Type | "void") ident "(" [FormPars] ")" {VarDecl} "{" {Statement} "}".
+FormPars = Type ident ["[" "]"] {"," Type ident ["[" "]"]}.
+Type = ident.
+Statement = DesignatorStatement ";" | "if" "(" Condition ")" Statement ["else" Statement] | "while" "(" Condition ")" Statement | "break" ";" | "continue" ";" | "return" [Expr] ";" | "read" "(" Designator ")" ";" | "print" "(" Expr ["," numConst] ")" ";" | Designator "." "foreach" "(" ident "=>" Statement ")" ";" | "{" {Statement} "}".
+DesignatorStatement = Designator (Assignop Expr | "(" [ActPars] ")" | "++" | "‐‐") | "[" [Designator] {"," [Designator]}"]" "=" Designator.
+ActPars = Expr {"," Expr}.
+Condition = CondTerm {"||" CondTerm}.
+CondTerm = CondFact {"&&" CondFact}.
+CondFact = Expr [Relop Expr].
+Expr = ["‐"] Term {Addop Term}.
+Term = Factor {Mulop Factor}.
+Factor = Designator ["(" [ActPars] ")"] | numConst | charConst | boolConst | "new" Type ( "[" Expr "]" | "(" [ActPars] ")" ) | "(" Expr ")".
+Designator = ident {"." ident | "[" Expr]"}.
+Label = ident.
+Assignop = "=".
+Relop = "==" | "!=" | ">" | ">=" | "<" | "<=".
+Addop = "+" | "‐".
+Mulop = "*" | "/" | "%".
+
+
+
 
 
 
