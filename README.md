@@ -10,6 +10,7 @@
 - [Syntax Analysis in General](#syntax-analysis-in-general)
 - [Code Generation in General](#code-generation-in-general)
 - [Usage](#usage)
+- [Documentation](#documentation)
 - [License](#license)
 
 ## Overview
@@ -383,10 +384,6 @@ mulop = "* | / | %";
 - No more than 256 local variables may be used.
 - No more than 65536 global variables may be used.
 - A class cannot have more than 65536 fields.
-- The source code of the program must not exceed
-
-
-
 
 ## License
 
