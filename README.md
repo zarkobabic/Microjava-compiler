@@ -153,6 +153,239 @@ Addop = "+" | "‐".
 Mulop = "*" | "/" | "%".
 ```
 
+# A.3 Semantics
+
+All defined terms in this document are underlined to emphasize their particular meaning. Definitions of those terms are given below.
+
+## Reference type
+Arrays and classes are of reference type.
+
+## Constant type
+- The type of an integer constant (e.g., 17) is int.
+- The type of a character constant (e.g., 'x') is char.
+- The type of a logical constant (e.g., true) is bool.
+
+## Equivalent Data Types
+Two data types are equivalent
+- if they have the same name, or
+- if both are strings, and the types of their elements are equivalent.
+
+## Compatible data types
+The two data types are compatible
+- if they are equivalent, or
+- if one of them is a reference type, and the other is of type null.
+
+## Compatibility of data types when assigning
+Type `heart` is compatible when assigned to type `dst`
+- if they are `heart` and `dst` equivalent,
+- if `dst` is reference type, and `heart` is of the type null.
+- if `dst` is a reference to a base class and `src` is a reference to a derived class
+
+## Predeclared names
+- `int`: type of all integer values
+- `char`: type of all character values
+- `bool`: boolean type
+- `null`: the null value of a variable of type class or (character) string symbolically indicates a reference that does not point to any data
+- `aeolian`: end of character line (corresponds to the character '\n'); `print(eol)` makes a transition to a new line
+- `chr`: standard method; `chr(i)` performs the conversion of an integer expression and to character (char)
+- `ord`: standard method; `ord(ch)` performs character conversion ch to an integer value (int)
+
+## Scope of validity
+Validity range (scope) represents the textual reach of a method or class. It extends from the beginning of the method or class definition to the closing brace at the end of that definition. A scope does not include names declared in scopes that are lexically nested within it. In a scope, the names declared within it and all scopes outside it are "seen". The assumption is that there is an artificial global scope (universe), for which the main program is local and which contains all pre-declared names.
+
+- Name declaration in inner scope hides the declaration of the same name in the outer scope.
+
+## Note
+- Indirect recursion is not allowed, and each name must be declared before its first use.
+- Predeclared names (e.g., int or char) can be redeclared in the inner scope (but this is not recommended).
+
+# A.4 Contextual conditions
+
+## General contextual conditions
+- Each name in the program must be declared before first use.
+- A name must not be declared multiple times within the same scope.
+- There must be a named method in the program `main`. It must be declared as a void method with no arguments.
+
+## Context conditions for standard methods
+- `chr(s)`: must be an expression of type int.
+- `ord(c)`: must be of type char.
+- `len(s)`: must be a string or character string.
+
+
+
+    // Program Structure
+    String program = "program" + " ident {ConstDecl | VarDecl | ClassDecl | RecordDecl } {" + "{MethodDecl} }.";
+
+    // Const Declaration
+    String constDecl = "const Type ident = (numConst | charConst | boolConst);";
+    // Terminal types numConst, charConst, or boolConst must be equivalent to Type.
+
+    // Variable Declaration
+    String varDecl = "Type ident [][, ident [][]];";
+
+    // Class Declaration
+    String classDecl = "class ident extends Type {" + "VarDecl {" + "ConstructorDecl MethodDecl}}";
+    // Type when deriving a class from another class, it must be an inner class of the main program.
+
+    // Method Declaration
+    String methodDecl = "(Type | void) ident (FormPars) VarDecl {Statement}";
+    // If the method is not of type void, it must have a return statement within its body.
+
+    // Constructor Declaration
+    String constructorDecl = "ident (FormPars) VarDecl {Statement}";
+    // A class constructor must have the same name as the class for which it is defined.
+    // There cannot be two constructors within the same class with the same formal parameters.
+
+    // Formal Parameters
+    String formPars = "Type ident [][] [, Type ident [][]]";
+
+    // Type Declaration
+    String type = "ident";
+    // ident must indicate a data type.
+
+    // Statements
+
+    // Designator Statement
+    String designatorStatement = "Designator Assignop Expr;";
+    // Designator must denote a variable, array element, or field within an object.
+    // Non-terminal type Expr must be compatible at assignment with non-terminal type Designator.
+
+    // Increment/Decrement Statement
+    String incrementDecrementStatement = "Designator (++ | --);";
+    // Designator must denote a variable, array element, or field of an inner class object.
+    // Designator must be of type int.
+
+    // Method Call Statement
+    String methodCallStatement = "Designator (ActPars);";
+    // Designator must denote a non-static method of the inner class or a global function.
+
+    // Array Element Assignment
+    String arrayElementAssignment = "[Designator, Designator, ...] = Designator";
+    // All Designator non-terminals to the left must denote a variable, array element, or field within an object.
+    // Designator to the right must represent a string.
+    // Array element types must be compatible at assignment.
+
+    // Break Statement
+    String breakStatement = "break;";
+    // The break statement can only be used inside while or foreach loops.
+    // Aborts execution immediately surrounding loops.
+
+    // Continue Statement
+    String continueStatement = "continue;";
+    // The continue statement can only be used inside while or foreach loops.
+    // Terminates the current iteration immediately surrounding loops.
+
+    // Read Statement
+    String readStatement = "read(Designator);";
+    // Designator must denote a variable, array element, or field within an object.
+    // Designator must be of type int, char, or bool.
+
+    // Print Statement
+    String printStatement = "print(Expr [, numConst]);";
+    // Expr must be of type int, char, or bool.
+
+    // Return Statement
+    String returnStatement = "return [Expr];";
+    // Non-terminal type Expr must be equivalent to the return type of the current method/global function.
+    // If non-terminal Expr is missing, the current method must be declared void.
+    // It must not exist outside the body of (static) methods, i.e., global functions.
+
+    // If Statement
+    String ifStatement = "if (Condition) Statement [else Statement];";
+    // Conditional expression type Condition must be bool.
+
+    // While Loop
+    String whileLoop = "while (Condition) Statement;";
+    // Conditional expression Condition must be of type bool.
+    // Checks the specified condition when entering and at the end of the loop body.
+
+    // Foreach Loop
+    String foreachLoop = "Designator.foreach(ident => Statement);";
+    // Designator must denote a string of arbitrary type.
+    // ident must be a local or global variable of the same type as the elements of the array described by the Designator.
+    // In each iteration of the loop, ident indicates the current element of the array.
+
+    // Function Calls
+
+    // Actual Parameters
+    String actPars = "Expr [, Expr];";
+    // The number of formal and actual arguments of a method or constructor must be the same.
+    // The type of each actual argument must be compatible at assignment with the type of each formal argument.
+
+    // Conditions
+
+    // Conditional Expression
+    String condition = "CondTerm || CondTerm;";
+    
+    // Conditional Term
+    String condTerm = "CondFact && CondFact;";
+
+    // Conditional Factor
+    String condFact = "Expr Relop Expr;";
+    // The types of both expressions must be compatible.
+    // With variables of class or array type, only != and == can be used from the relational operators.
+
+    // Expressions
+
+    // Basic Expression
+    String expr = "Term;";
+
+    // Negation Expression
+    String negationExpr = "- Term;";
+    // Term must be of type int.
+
+    // Addition Expression
+    String additionExpr = "Expr Addop Term;";
+    // Expr and Term must be of type int and compatible.
+
+    // Multiplication Expression
+    String multiplicationExpr = "Term Mullop Factor;";
+    // Term and Factor must be of type int.
+
+    // Factors
+
+    // Designator Factor
+    String designatorFactor = "Designator | numConst | charConst | boolConst | (Expr);";
+
+    // Method Call Factor
+    String methodCallFactor = "Designator (ActPars);";
+    // Designator must denote a non-static method, a constructor, or a global function.
+
+    // Array Creation Factor
+    String arrayCreationFactor = "new Type [Expr];";
+    // Expr must be of type int.
+
+    // Object Creation Factor
+    String objectCreationFactor = "new Type (ActPars);";
+    // Type must denote an inner class (user-defined type).
+
+    // Designators
+
+    String designator1 = "Designator . ident;";
+    // Non-terminal type Designator must be an inner class (ident must be either a field or a method of an object marked with a non-terminal Designator).
+
+    String designator2 = "Designator [Expr];";
+    // Non-terminal type Designator must be a string.
+    // Non-terminal type Expr must be an int.
+
+    // Operators
+
+    String assignop = "=";
+    // The assignment operator is right-associative.
+
+    String relop = "== | != | > | >= | < | <=";
+    String addop = "+ | -";
+    // Operators are left-associative.
+
+    String mulop = "* | / | %";
+    // Operators are left-associative.
+
+    // Implementation Limitations
+
+    // No more than 256 local variables may be used.
+    // No more than 65536 global variables may be used.
+    // A class cannot have more than 65536 fields.
+    // The source code of the program must not exceed
 
 
 
